@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="26769372-57ee-4df2-a56a-df8d9e7ddeeb" name="nachhilfe-con" url="http://nachhilfe22.s1910456009.student.kwmhgb.at/">
+        <fileTransfer rootFolder="/usr/home/sstud435/public_html/nachhilfe22/bookstoreServer" accessType="SFTP" host="s1910456009.student.kwmhgb.at" port="222" sshConfigId="e85ece74-02d9-471e-81ff-99da337cd686" sshConfig="sstud435@s1910456009.student.kwmhgb.at:222 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
