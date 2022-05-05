@@ -10,7 +10,7 @@ class TutoringComment extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['comment'];
+    protected $fillable = ['comment', 'tutoring_id', 'user_id'];
 
     public function tutoring() : BelongsTo
     {

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Tutoring;
 use App\Models\TutoringDate;
-use App\Models\TutoringComment;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -17,18 +17,25 @@ class TutoringController extends Controller
         return $tutorings;
     }
 
+    public function indexById($tutoringId){
+        $tutoring = Tutoring::with(['users','tutoringdates','tutoringcomments'])->find($tutoringId);
+        return $tutoring;
+    }
+
     public function save(Request $request) : JsonResponse {
-
-
-
         DB::beginTransaction();
         try {
             $tutoring = Tutoring::create($request->all());
+            //save tutor(user) for tutoring offer
+            if(isset($request['userid']))
+            {
+                $tutor = User::find($request->input('userid'));
+                $tutoring->users()->save($tutor);
+            }
 
             //save tutoringdates
             if(isset($request['tutoringdates']) && is_array($request['tutoringdates']))
             {
-//                $request = $this->parseRequest($request);
                 foreach ($request['tutoringdates'] as $tudate)
                 {
                     $tud = TutoringDate::firstOrNew([
@@ -43,23 +50,28 @@ class TutoringController extends Controller
 
             //save possible comments
             //TODO im Postman hinzufügen
-            if(isset($request['tutoringcomments']) && is_array($request['tutoringcomments']))
-            {
-                foreach ($request['tutoringcomments'] as $tucom)
-                {
-                    $tucomment = TutoringComment::firstOrNew([
-                        'comment' => $tucom['comment']
-                    ]);
-                    $tutoring->tutoringcomments()->save($tucomment);
-                }
-            }
+//            if(isset($request['tutoringcomments']) && is_array($request['tutoringcomments']) && isset($request['userid']))
+//            {
+//                foreach ($request['tutoringcomments'] as $tucom)
+//                {
+//                    $tucomment = TutoringComment::firstOrNew([
+//                        'comment' => $tucom['comment'],
+////                        'user_id' => $request[['user' => 'userid']]
+//                    ]);
+//                    var_dump($request->input('userid'));
+//                    $tutor = User::find($request->input('userid'));
+//
+//                    $tutor->tutoringcomments()->save($tucomment);
+//                    $tutoring->tutoringcomments()->save($tucomment);
+//                }
+//            }
             DB::commit();
             return response()->json($tutoring, 201);
 
         }
         catch (\Exception $e) {
             DB::rollBack();
-            return response()->json("saving book failed:" . $e->getMessage(), 420);
+            return response()->json("saving tutoring failed:" . $e->getMessage(), 420);
         }
     }
 
@@ -88,21 +100,10 @@ class TutoringController extends Controller
                         $tutoring->tutoringdates()->save($tutoringdate);
                     }
                 }
-                //update authors
-
-//                $ids = [];
-//                if (isset($request['authors']) && is_array($request['authors'])) {
-//                    foreach ($request['authors'] as $auth) {
-//                        array_push($ids,$auth['id']);
-//                    }
-//                }
-//                $book->authors()->sync($ids);
                 $tutoring->save();
 
             }
             DB::commit();
-//            $book1 = Book::with(['authors', 'images', 'user'])
-//                ->where('isbn', $isbn)->first();
             // return a vaild http response
             return response()->json($tutoring, 201);
         }
