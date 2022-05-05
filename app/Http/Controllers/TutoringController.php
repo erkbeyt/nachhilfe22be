@@ -47,24 +47,6 @@ class TutoringController extends Controller
                     $tutoring->tutoringdates()->save($tud);
                 }
             }
-
-            //save possible comments
-            //TODO im Postman hinzufügen
-//            if(isset($request['tutoringcomments']) && is_array($request['tutoringcomments']) && isset($request['userid']))
-//            {
-//                foreach ($request['tutoringcomments'] as $tucom)
-//                {
-//                    $tucomment = TutoringComment::firstOrNew([
-//                        'comment' => $tucom['comment'],
-////                        'user_id' => $request[['user' => 'userid']]
-//                    ]);
-//                    var_dump($request->input('userid'));
-//                    $tutor = User::find($request->input('userid'));
-//
-//                    $tutor->tutoringcomments()->save($tucomment);
-//                    $tutoring->tutoringcomments()->save($tucomment);
-//                }
-//            }
             DB::commit();
             return response()->json($tutoring, 201);
 

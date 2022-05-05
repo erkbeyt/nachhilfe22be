@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TutoringController;
 use App\Http\Controllers\TutoringDateController;
+use App\Http\Controllers\AuthController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -21,19 +23,28 @@ use App\Http\Controllers\TutoringDateController;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+//protected routes
+Route::group(['middleware'=>['api','auth.jwt']], function(){
+    Route::post('user',[UserController::class,'save']);
+    Route::post('tutoring',[TutoringController::class,'save']);
+    Route::post('tutoringcomment',[TutoringCommentController::class,'save']);
+
+    Route::put('user/{id}',[UserController::class,'update']);
+    Route::put('tutoring/{id}',[TutoringController::class,'update']);
+    Route::put('tutoringdate/{id}',[TutoringDateController::class,'update']);
+
+    Route::delete('user/{id}', [UserController::class,'delete']);
+    Route::delete('tutoring/{id}', [TutoringController::class,'delete']);
+
+    Route::post('auth/logout',[AuthController::class,'logout']);
+});
+
+//auth test
+Route::post('auth/login',[AuthController::class,'login']);
 
 Route::get('users',[UserController::class,'index']);
 Route::get('tutorings',[TutoringController::class,'index']);
 Route::get('tutoringcomments',[TutoringCommentController::class,'index']);
 Route::get('tutoringbyid/{id}',[TutoringController::class,'indexById']);
 
-Route::post('user',[UserController::class,'save']);
-Route::post('tutoring',[TutoringController::class,'save']);
-Route::post('tutoringcomment',[TutoringCommentController::class,'save']);
 
-Route::put('user/{id}',[UserController::class,'update']);
-Route::put('tutoring/{id}',[TutoringController::class,'update']);
-Route::put('tutoringdate/{id}',[TutoringDateController::class,'update']);
-
-Route::delete('user/{id}', [UserController::class,'delete']);
-Route::delete('tutoring/{id}', [TutoringController::class,'delete']);

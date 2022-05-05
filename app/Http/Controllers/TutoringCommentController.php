@@ -33,4 +33,35 @@ class TutoringCommentController extends Controller
         }
     }
 
+    public function update(Request $request, int $tutoringcommentId) : JsonResponse
+    {
+        DB::beginTransaction();
+        try {
+            $tutoringcomment = TutoringComment::with(['tutoring','user'])
+                ->find($tutoringcommentId);
+            if ($tutoringcomment != null) {
+                $tutoringcomment->update($request->all());
+                $tutoringcomment->save();
+            }
+            DB::commit();
+            // return a vaild http response
+            return response()->json($tutoringcomment, 201);
+        }
+        catch (\Exception $e) {
+            // rollback all queries
+            DB::rollBack();
+            return response()->json("updating tutoringcomment failed: " . $e->getMessage(), 420);
+        }
+    }
+
+    public function delete(string $tutoringcommentid) : JsonResponse
+    {
+        $tutoringcomment = TutoringComment::find($tutoringcommentid);
+        if ($tutoringcomment != null) {
+            $tutoringcomment->delete();
+        }
+        else
+            throw new \Exception("tutoringcomment couldn't be deleted - it does not exist");
+        return response()->json('Tutoring Comment: ' . $tutoringcomment->comment . ' successfully deleted', 200);
+    }
 }
