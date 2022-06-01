@@ -11,10 +11,15 @@ class TutoringDate extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['tutoringdate', 'booked', 'accepted', 'status'];
+    protected $fillable = ['tutoringdate', 'booked', 'accepted', 'status', 'user_id'];
 
     public function tutoring() : BelongsTo
     {
         return $this->belongsTo(Tutoring::class);
+    }
+
+    public function user() : BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }

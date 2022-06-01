@@ -28,6 +28,8 @@ Route::group(['middleware'=>['api','auth.jwt']], function(){
     Route::post('user',[UserController::class,'save']);
     Route::post('tutoring',[TutoringController::class,'save']);
     Route::post('tutoringcomment',[TutoringCommentController::class,'save']);
+    Route::post('tutoringdate',[TutoringDateController::class,'save']);
+
 
     Route::put('user/{id}',[UserController::class,'update']);
     Route::put('tutoring/{id}',[TutoringController::class,'update']);
@@ -43,8 +45,9 @@ Route::group(['middleware'=>['api','auth.jwt']], function(){
 Route::post('auth/login',[AuthController::class,'login']);
 
 Route::get('users',[UserController::class,'index']);
+Route::get('userbyid/{id}',[UserController::class,'indexById']);
 Route::get('tutorings',[TutoringController::class,'index']);
 Route::get('tutoringcomments',[TutoringCommentController::class,'index']);
+Route::get('tutoringdates',[TutoringDateController::class,'index']);
 Route::get('tutoringbyid/{id}',[TutoringController::class,'indexById']);
-
-
+Route::get('indexbyuser/{id}',[TutoringController::class,'indexByUser']);

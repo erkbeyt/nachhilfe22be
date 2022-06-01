@@ -17,6 +17,14 @@ class TutoringController extends Controller
         return $tutorings;
     }
 
+    public function indexByUser($userid){
+        $tutorings = Tutoring::with(['tutoringdates' => function($q) use ($userid){
+            $q->where('user_id', '=', $userid);
+        }])
+            ->get();
+        return $tutorings;
+    }
+
     public function indexById($tutoringId){
         $tutoring = Tutoring::with(['users','tutoringdates','tutoringcomments'])->find($tutoringId);
         return $tutoring;
@@ -43,6 +51,7 @@ class TutoringController extends Controller
                         'booked' => $tudate['booked'],
                         'accepted'=> $tudate['accepted'],
                         'status'=> $tudate['status'],
+                        'user_id'=>$tudate['user_id'],
                     ]);
                     $tutoring->tutoringdates()->save($tud);
                 }
@@ -78,6 +87,7 @@ class TutoringController extends Controller
                             'booked' => $tudate['booked'],
                             'accepted'=> $tudate['accepted'],
                             'status'=> $tudate['status'],
+                            'user_id'=> $tudate['user_id'],
                         ]);
                         $tutoring->tutoringdates()->save($tutoringdate);
                     }

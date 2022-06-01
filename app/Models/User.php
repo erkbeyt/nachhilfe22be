@@ -52,6 +52,11 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(TutoringComment::class);
     }
 
+    public function tutoringdates(): HasMany
+    {
+        return $this->hasMany(TutoringDate::class);
+    }
+
     public function getJWTIdentifier()
     {
         return $this->getKey();

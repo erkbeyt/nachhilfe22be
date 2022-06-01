@@ -18,8 +18,8 @@ class TutoringCommentsTableSeeder extends Seeder
     {
         $tucomment = new TutoringComment();
         $tucomment->comment = 'Anfrage ob ein Termin am 15.Mai verfügbar wäre';
-//        $tucomment->tutoingid = '1';
-//        $tucomment->userid = '3';
+        $tucomment->tutoring_id = '1';
+        $tucomment->user_id = '3';
 //        dd($user);
         $tucomment->save();
         $user = User::where('id','3')->get();
@@ -28,9 +28,12 @@ class TutoringCommentsTableSeeder extends Seeder
 
         $tucomment2 = new TutoringComment();
         $tucomment2->comment = 'Anfrage ob ein Termin am 20.Mai verfügbar wäre';
-//        $tucomment2->tutoing_id = '1';
-//        $tucomment2->user_id = '3';
-//        $tucomment2->user()->associate($user);
+        $tucomment2->tutoring_id = '2';
+        $tucomment2->user_id = '3';
+        $tucomment2->save();
+
+        $user2 = User::where('id','3')->get();
+        $tucomment2->user()->associate($user2);
         $tucomment2->save();
     }
 }

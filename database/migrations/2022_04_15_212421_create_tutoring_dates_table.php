@@ -19,13 +19,23 @@ class CreateTutoringDatesTable extends Migration
             $table->boolean('booked');
             $table->boolean('accepted');
             $table->string('status')->nullable();
-            // fk fields for relations - model name lowercase + "_id"
-            $table->bigInteger('tutoring_id')->unsigned();
-            // create constraint in DB
-            $table->foreign('tutoring_id')
-                ->references('id')->on('tutorings')
-                ->onDelete('cascade');
+            $table->integer('user_id')->nullable();
+            $table->foreignId('tutoring_id')->constrained()->onDelete('cascade');
             $table->timestamps();
+
+//            // fk fields for relations - model name lowercase + "_id"
+//            $table->bigInteger('tutoring_id')->unsigned();
+//            // create constraint in DB
+//            $table->foreign('tutoring_id')
+//                ->references('id')->on('tutorings')
+//                ->onDelete('cascade');
+//            //Helper to know who commented on this tutoring offer
+//            $table->bigInteger('user_id')->unsigned();
+//            // create constraint in DB
+//            $table->foreign('user_id')
+//                ->references('id')->on('users')
+//                ->onDelete('cascade');
+
         });
     }
 

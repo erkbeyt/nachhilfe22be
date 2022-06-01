@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tutoring;
+use App\Models\User;
 use DateTime;
 use App\Models\TutoringDate;
 use Illuminate\Http\JsonResponse;
@@ -12,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 class TutoringDateController extends Controller
 {
     public function index(){
-        $tutoringdate = TutoringDate::with(['tutoring'])->get();
+        $tutoringdate = TutoringDate::with(['user','tutoring'])->get();
         return $tutoringdate;
     }
 
@@ -21,12 +22,22 @@ class TutoringDateController extends Controller
         try {
             $tutoringdate = TutoringDate::create($request->all());
 
-            //save tutor(user) for tutoring offer
+            //save tutoring offer
             if(isset($request['tutoringid']))
             {
                 $tutoring = Tutoring::find($request->input('tutoringid'));
-                $tutoringdate->tutoring()->save($tutoring);
+                $tutoringdate->tutoring()->associate($tutoring);
+                $tutoringdate->save();
             }
+
+            //save student who booked tutoring
+            if(isset($request['userid']))
+            {
+                $user = User::find($request->input('userid'));
+                $tutoringdate->user()->associate($user);
+                $tutoringdate->save();
+            }
+
             DB::commit();
             return response()->json($tutoringdate, 201);
 
@@ -43,7 +54,7 @@ class TutoringDateController extends Controller
 
         DB::beginTransaction();
         try {
-            $tutoringdate = TutoringDate::with(['tutoring'])
+            $tutoringdate = TutoringDate::with(['tutoring','user'])
                 ->find($tutoringdateId);
             if ($tutoringdate != null) {
                 $request = $this->parseRequest($request);

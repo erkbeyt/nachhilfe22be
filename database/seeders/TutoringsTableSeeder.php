@@ -47,11 +47,25 @@ class TutoringsTableSeeder extends Seeder
         $tudate->accepted = false;
         $tudate->status = 'Neutral';
 
+        $stu = User::all()->find(3);
+        $tudate->user()->associate($stu);
+        $tudate->tutoring()->associate($tu4);
+        $tudate->save();
+
+//        dd($tudate);
+
         $tudate2 = new TutoringDate();
         $tudate2->tutoringdate = new DateTime();
         $tudate2->booked = true;
         $tudate2->accepted = true;
         $tudate2->status = 'Suchender ist nicht gekommen';
+
+        $stu2 = User::all()->find(4);
+        $tudate2->user()->associate($stu2);
+        $tudate2->tutoring()->associate($tu4);
+        $tudate2->save();
+//
+//        dd($tudate2);
 
         $tu4->tutoringdates()->saveMany([$tudate,$tudate2]);
 
@@ -59,20 +73,24 @@ class TutoringsTableSeeder extends Seeder
 
         $tucomment = new TutoringComment();
         $tucomment->comment = 'Anfrage ob ein Termin am 15.Mai verfügbar wäre';
-        $tucomment->tutoring()->associate($tu4);
-//        $studentx = User::where('id','2')->get();
-//        $stu = User::all()->first();
-//        find(primary_key) liefert model vom object
-        $stu = User::all()->find(3);
+        $tucomment->tutoring()->associate($tu3);
         $tucomment->user()->associate($stu);
         $tucomment->save();
 
-//        $tucomment2 = new TutoringComment();
-//        $tucomment2->comment = 'Anfrage ob ein Termin am 20.Mai verfügbar wäre';
-//        $tucomment2->tutoring()->associate($tu4);
-//        $tucomment2->save();
+//        $studentx = User::where('id','2')->get();
+//        $stu = User::all()->first();
+//        find(primary_key) liefert model vom object
 
-        $tu4->tutoringcomments()->saveMany([$tucomment]);
+        $tucomment2 = new TutoringComment();
+        $tucomment2->comment = 'Anfrage ob ein Termin am 20.Juni verfügbar wäre';
+        $tucomment2->tutoring()->associate($tu4);
+        $tucomment2->user()->associate($stu2);
+        $tucomment2->save();
+
+        $tu3->tutoringcomments()->saveMany([$tucomment]);
+        $tu3->save();
+
+        $tu4->tutoringcomments()->saveMany([$tucomment2]);
         $tu4->save();
 //
 //        $student1 = User::all()
@@ -82,15 +100,17 @@ class TutoringsTableSeeder extends Seeder
 //        $test->tutoringcomments()->associate($student1);
 //        $test->save();
 
-        $student1 = User::all()
+        $tutor1 = User::all()
             ->where('isTutor',true)
             ->where('id', '1')
             ->pluck('id');
-        $student = User::where('id','2')->get();
-        $tu4->users()->sync($student);
-        $tu->users()->sync($student);
-        $tu3->users()->sync($student1);
-        $tu2->users()->sync($student1);
+        $tutor2 = User::where('id','2')->get();
+
+        $tu4->users()->sync($tutor2);
+        $tu->users()->sync($tutor2);
+        $tu3->users()->sync($tutor1);
+        $tu2->users()->sync($tutor1);
+
         $tu->save();
         $tu2->save();
         $tu4->save();

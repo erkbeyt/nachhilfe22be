@@ -14,6 +14,11 @@ class UserController extends Controller
         return $users;
     }
 
+    public function indexById($userId){
+        $user = User::with(['tutorings','tutoringcomments'])->find($userId);
+        return $user;
+    }
+
     /**
      * create new user
      */
